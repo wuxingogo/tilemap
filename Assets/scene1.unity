@@ -303,3 +303,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bb278a58ef67a1468fdf161d2cdd218, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mapWidth: 3
+  mapHeight: 3
+  tileSize: 1

@@ -2,6 +2,9 @@
 using System.Collections;
 
 public class Tilemap : MonoBehaviour {
+	public int mapWidth = 3;
+	public int mapHeight = 2;
+	public float tileSize = 1.0f;
 
 	// Use this for initialization
 	void Start () {
@@ -9,37 +12,48 @@ public class Tilemap : MonoBehaviour {
 	}
 
 	private void buildMesh() {
-		int numTris = 2;
+		int numTiles = mapWidth * mapWidth;
+		int numTris = numTiles * 2;
+
+		int numVertsX = mapWidth + 1;
+		int numVertsZ = mapHeight + 1;
+		int numVerts = numVertsX * numVertsZ;
 
 		Mesh mesh = new Mesh ();
 
-		Vector3[] vertices = new Vector3[4];
-		vertices [0] = new Vector3 (0, 0, 0);
-		vertices [1] = new Vector3 (1, 0, 0);
-		vertices [2] = new Vector3 (1, 0, -1);
-		vertices [3] = new Vector3 (0, 0, -1);
+		Vector3[] vertices = new Vector3[numVerts];
+		Vector3[] normals = new Vector3[numVerts];
+		Vector2[] uv = new Vector2[numVerts];
 
-		Vector3[] normals = new Vector3[4];
-		normals [0] = Vector3.up;
-		normals [1] = Vector3.up;
-		normals [2] = Vector3.up;
-		normals [3] = Vector3.up;
 
-		/* Unity uv orgin is bottom left (I'm using a vertex origin of top left) */
-		Vector2[] uv = new Vector2[4];
-		uv [0] = new Vector2 (0, 1);
-		uv [1] = new Vector2 (1, 1);
-		uv [2] = new Vector2 (1, 0);
-		uv [3] = new Vector2 (0, 0);
+		for (int z = 0; z < numVertsZ; z++) {
+			for(int x = 0; x < numVertsX; x++) {
+				int i = z * numVertsX + x;
+
+				vertices[i] = new Vector3(x * tileSize, 0, -1 * z * tileSize);
+				normals[i] = Vector3.up;
+				/* Unity uv orgin is bottom left (I'm using a vertex origin of top left
+				 * so flip the y value by subtracting by one) */
+				uv[i] = new Vector2((float)x/mapWidth, 1 - (float)z/mapHeight);
+			}
+		}
 
 		int[] triangles = new int[numTris * 3];
-		triangles [0] = 0;
-		triangles [1] = 1;
-		triangles [2] = 2;
-		triangles [3] = 0;
-		triangles [4] = 2;
-		triangles [5] = 3;
 
+		for (int z = 0; z < mapHeight; z++) {
+			for (int x = 0; x < mapWidth; x++) {
+				int i = (z * mapWidth + x) * 2 * 3;
+				int j = z * numVertsX + x;
+
+				triangles [i] = j;
+				triangles [i + 1] = j + 1;
+				triangles [i + 2] = j + numVertsX + 1;
+
+				triangles [i + 3] = j;
+				triangles [i + 4] = j + numVertsX + 1;
+				triangles [i + 5] = j + numVertsX;
+			}
+		}
 
 		mesh.vertices = vertices;
 		mesh.normals = normals;
