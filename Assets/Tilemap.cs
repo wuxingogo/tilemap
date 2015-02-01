@@ -23,7 +23,6 @@ public class TileMap : MonoBehaviour {
 		Mesh mesh = new Mesh ();
 
 		Vector3[] vertices = new Vector3[numVerts];
-		Vector3[] normals = new Vector3[numVerts];
 		Vector2[] uv = new Vector2[numVerts];
 
 
@@ -31,11 +30,8 @@ public class TileMap : MonoBehaviour {
 			for(int x = 0; x < numVertsX; x++) {
 				int i = z * numVertsX + x;
 
-				vertices[i] = new Vector3(x * tileSize, 0, -1 * z * tileSize);
-				normals[i] = Vector3.up;
-				/* Unity uv orgin is bottom left (I'm using a vertex origin of top left
-				 * so flip the y value by subtracting by one) */
-				uv[i] = new Vector2((float)x/mapWidth, 1 - (float)z/mapHeight);
+				vertices[i] = new Vector3(x * tileSize, Random.Range(-0.25f, 0.25f), z * tileSize);
+				uv[i] = new Vector2((float)x/mapWidth, (float)z/mapHeight);
 			}
 		}
 
@@ -47,21 +43,25 @@ public class TileMap : MonoBehaviour {
 				int j = z * numVertsX + x;
 
 				triangles [i] = j;
-				triangles [i + 1] = j + 1;
-				triangles [i + 2] = j + numVertsX + 1;
+				triangles [i + 1] = j + numVertsX;
+				triangles [i + 2] = j + 1;
 
-				triangles [i + 3] = j;
+				triangles [i + 3] = j + numVertsX;
 				triangles [i + 4] = j + numVertsX + 1;
-				triangles [i + 5] = j + numVertsX;
+				triangles [i + 5] = j + 1;
 			}
 		}
 
 		mesh.vertices = vertices;
-		mesh.normals = normals;
 		mesh.uv = uv;
 		mesh.triangles = triangles;
 
+		mesh.RecalculateNormals ();
+
 		MeshFilter meshFilter = GetComponent<MeshFilter> ();
 		meshFilter.mesh = mesh;
+
+		MeshCollider meshCollider = GetComponent<MeshCollider> ();
+		meshCollider.sharedMesh = mesh;
 	}
 }
