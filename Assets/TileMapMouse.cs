@@ -2,6 +2,15 @@
 using System.Collections;
 
 public class TileMapMouse : MonoBehaviour {
+	public Transform selectionCube;
+
+	private TileMap tileMap;
+
+	void Start() {
+		tileMap = GetComponent<TileMap> ();
+
+		selectionCube.localScale = new Vector3 (tileMap.tileSize, tileMap.mapDepth, tileMap.tileSize);
+	}
 
 	// Update is called once per frame
 	void Update () {
@@ -9,11 +18,18 @@ public class TileMapMouse : MonoBehaviour {
 
 		RaycastHit hitInfo;
 		if (collider.Raycast (ray, out hitInfo, Mathf.Infinity)) {
-			Debug.Log("----------------------------------------------------------");
-			Debug.Log (transform.InverseTransformPoint(hitInfo.point));
-			Debug.Log (transform.worldToLocalMatrix * new Vector4(hitInfo.point.x, hitInfo.point.y, hitInfo.point.z, 1));
-		} else {
+			selectionCube.gameObject.SetActive(true);
 
+			Vector3 tilePos = transform.InverseTransformPoint(hitInfo.point);
+			tilePos /= tileMap.tileSize;
+
+			tilePos.x = Mathf.Floor(tilePos.x) * tileMap.tileSize;
+			tilePos.y = 0;
+			tilePos.z = Mathf.Floor(tilePos.z) * tileMap.tileSize;
+
+			selectionCube.position = tilePos;
+		} else {
+			selectionCube.gameObject.SetActive(false);
 		}
 	}
 }

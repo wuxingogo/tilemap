@@ -1,0 +1,1 @@
+Look into making selection that literally colors a part of the mesh (rather than placing a transparent plane on top)

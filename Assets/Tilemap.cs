@@ -6,6 +6,7 @@ public class TileMap : MonoBehaviour {
 	public int mapWidth = 3;
 	public int mapHeight = 2;
 	public float tileSize = 1.0f;
+	public float mapDepth = 0.25f;
 
 	// Use this for initialization
 	void Start () {
@@ -13,7 +14,7 @@ public class TileMap : MonoBehaviour {
 	}
 
 	public void buildMesh() {
-		int numTiles = mapWidth * mapWidth;
+		int numTiles = mapWidth * mapHeight;
 		int numTris = numTiles * 2;
 
 		int numVertsX = mapWidth + 1;
@@ -30,7 +31,7 @@ public class TileMap : MonoBehaviour {
 			for(int x = 0; x < numVertsX; x++) {
 				int i = z * numVertsX + x;
 
-				vertices[i] = new Vector3(x * tileSize, Random.Range(-0.25f, 0.25f), z * tileSize);
+				vertices[i] = new Vector3(x * tileSize, Random.Range(-mapDepth, mapDepth), z * tileSize);
 				uv[i] = new Vector2((float)x/mapWidth, (float)z/mapHeight);
 			}
 		}
