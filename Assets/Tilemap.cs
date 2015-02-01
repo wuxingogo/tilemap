@@ -64,5 +64,23 @@ public class TileMap : MonoBehaviour {
 
 		MeshCollider meshCollider = GetComponent<MeshCollider> ();
 		meshCollider.sharedMesh = mesh;
+	
+		buildTexture ();
+	}
+
+	private void buildTexture() {
+		Texture2D tex = new Texture2D (mapWidth, mapHeight);
+		tex.filterMode = FilterMode.Point;
+
+		for(int z = 0; z < mapHeight; z++) {
+			for(int x = 0; x < mapWidth; x++) {
+				Color c = new Color(Random.value, Random.value, Random.value);
+				tex.SetPixel(x, z, c);
+			}
+		}
+
+		tex.Apply ();
+
+		renderer.sharedMaterial.mainTexture = tex;
 	}
 }
