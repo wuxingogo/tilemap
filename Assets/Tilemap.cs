@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Tilemap : MonoBehaviour {
+[ExecuteInEditMode]
+public class TileMap : MonoBehaviour {
 	public int mapWidth = 3;
 	public int mapHeight = 2;
 	public float tileSize = 1.0f;
@@ -11,7 +12,7 @@ public class Tilemap : MonoBehaviour {
 		buildMesh ();
 	}
 
-	private void buildMesh() {
+	public void buildMesh() {
 		int numTiles = mapWidth * mapWidth;
 		int numTris = numTiles * 2;
 
