@@ -1,1 +1,3 @@
-Look into making selection that literally colors a part of the mesh (rather than placing a transparent plane on top)
+Look into making selection that literally colors a part of the mesh (rather than placing a transparent cube on top)
+	possibly have a highlighted version of every tile on the map so on select I change the uv of the tile to the selected version's coords
+	possibly have a 2 triangle transparent plane that I modify the vertices to overlap the current tile
