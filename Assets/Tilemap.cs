@@ -17,8 +17,8 @@ public class TileMap : MonoBehaviour {
 		int numTiles = mapWidth * mapHeight;
 		int numTris = numTiles * 2;
 
-		int numVertsX = mapWidth + 1;
-		int numVertsZ = mapHeight + 1;
+		int numVertsX = 2 * (mapWidth - 1) + 2;
+		int numVertsZ = 2 * (mapHeight - 1) + 2;
 		int numVerts = numVertsX * numVertsZ;
 
 		Mesh mesh = new Mesh ();
@@ -29,10 +29,22 @@ public class TileMap : MonoBehaviour {
 
 		for (int z = 0; z < numVertsZ; z++) {
 			for(int x = 0; x < numVertsX; x++) {
-				int i = z * numVertsX + x;
+				Vector3 vert = new Vector3((x / 2) * tileSize, 0, (z / 2) * tileSize);
+				Vector2 texCoord = Vector2.zero;
 
-				vertices[i] = new Vector3(x * tileSize, Random.Range(-mapDepth, mapDepth), z * tileSize);
-				uv[i] = new Vector2((float)x/mapWidth, (float)z/mapHeight);
+				if(x % 2 == 1) {
+					vert.x += tileSize;
+					texCoord.x = 1;
+				}
+
+				if(z % 2 == 1) {
+					vert.z += tileSize;
+					texCoord.y = 1;
+				}
+
+				int i = z * numVertsX + x;
+				vertices[i] = vert;
+				uv[i] = texCoord;
 			}
 		}
 
@@ -41,7 +53,7 @@ public class TileMap : MonoBehaviour {
 		for (int z = 0; z < mapHeight; z++) {
 			for (int x = 0; x < mapWidth; x++) {
 				int i = (z * mapWidth + x) * 2 * 3;
-				int j = z * numVertsX + x;
+				int j = z*2 * numVertsX + x*2;
 
 				triangles [i] = j;
 				triangles [i + 1] = j + numVertsX;
@@ -64,23 +76,6 @@ public class TileMap : MonoBehaviour {
 
 		MeshCollider meshCollider = GetComponent<MeshCollider> ();
 		meshCollider.sharedMesh = mesh;
+	}
 	
-		buildTexture ();
-	}
-
-	private void buildTexture() {
-		Texture2D tex = new Texture2D (mapWidth, mapHeight);
-		tex.filterMode = FilterMode.Point;
-
-		for(int z = 0; z < mapHeight; z++) {
-			for(int x = 0; x < mapWidth; x++) {
-				Color c = new Color(Random.value, Random.value, Random.value);
-				tex.SetPixel(x, z, c);
-			}
-		}
-
-		tex.Apply ();
-
-		renderer.sharedMaterial.mainTexture = tex;
-	}
 }
