@@ -6,7 +6,7 @@ public class TileMap : MonoBehaviour {
 	public int mapWidth = 3;
 	public int mapHeight = 2;
 	public float tileSize = 1.0f;
-	public float mapDepth = 0.25f;
+	public float halfMapDepth = 0.25f;
 
 	// Use this for initialization
 	void Start () {
@@ -29,6 +29,8 @@ public class TileMap : MonoBehaviour {
 
 		for (int z = 0; z < numVertsZ; z++) {
 			for(int x = 0; x < numVertsX; x++) {
+				int i = z * numVertsX + x;
+
 				Vector3 vert = new Vector3((x / 2) * tileSize, 0, (z / 2) * tileSize);
 				Vector2 texCoord = Vector2.zero;
 
@@ -42,7 +44,19 @@ public class TileMap : MonoBehaviour {
 					texCoord.y = 1;
 				}
 
-				int i = z * numVertsX + x;
+				// Set vertex depth
+				if(z == 0 || z % 2 == 1) {
+					if(x % 2 == 0) {
+						vert.y = Random.Range(-halfMapDepth, halfMapDepth);
+
+						if(x != 0) {
+							vertices[i-1].y = vert.y;
+						}
+					}
+				} else {
+					vert.y = vertices[i-numVertsX].y;
+				}
+
 				vertices[i] = vert;
 				uv[i] = texCoord;
 			}
