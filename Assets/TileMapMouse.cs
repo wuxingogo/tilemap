@@ -9,8 +9,6 @@ public class TileMapMouse : MonoBehaviour {
 	void Start() {
 		tileMap = GetComponent<TileMap> ();
 
-
-
 		selectionCube.localScale = new Vector3 (tileMap.tileSize, Mathf.Max(2*tileMap.halfMapDepth, 0.01f), tileMap.tileSize);
 	}
 
