@@ -46,10 +46,10 @@ public class TileMap : MonoBehaviour {
 
 				// Set vertex depth
 				if(z == 0 || z % 2 == 1) {
-					if(x % 2 == 0) {
+					if(x == numVertsX-1 || x % 2 == 0) {
 						vert.y = Random.Range(-halfMapDepth, halfMapDepth);
 
-						if(x != 0) {
+						if(x != 0 && x != numVertsX-1 ) {
 							vertices[i-1].y = vert.y;
 						}
 					}
