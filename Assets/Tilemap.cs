@@ -15,6 +15,8 @@ public class TileMap : MonoBehaviour {
 	}
 
 	public void buildMesh() {
+		MapData map = new MapData (mapWidth, mapHeight);
+
 		int numTiles = mapWidth * mapHeight;
 		int numTris = numTiles * 2;
 
@@ -34,10 +36,24 @@ public class TileMap : MonoBehaviour {
 				int i = z * numVertsX + x;
 
 				Vector3 vert = new Vector3((x / 2) * tileSize, 0, (z / 2) * tileSize);
+				
+				// Set vertex depth
+				if(z == 0 || z % 2 == 1) {
+					if(x == numVertsX-1 || x % 2 == 0) {
+						vert.y = Random.Range(-halfMapDepth, halfMapDepth);
+						
+						if(x != 0 && x != numVertsX-1 ) {
+							vertices[i-1].y = vert.y;
+						}
+					}
+				} else {
+					vert.y = vertices[i-numVertsX].y;
+				}
+
 				Vector2 texCoord;
 
 				if(x % 2 == 0 && z % 2 == 0) {
-					int type = Random.Range(0, 4);
+					int type = map[x/2, z/2];
 					texCoord = new Vector2(type * textureStep, 0);
 				} else {
 					int tileX = (x/2)*2;
@@ -54,19 +70,6 @@ public class TileMap : MonoBehaviour {
 				if(z % 2 == 1) {
 					vert.z += tileSize;
 					texCoord.y = 1;
-				}
-
-				// Set vertex depth
-				if(z == 0 || z % 2 == 1) {
-					if(x == numVertsX-1 || x % 2 == 0) {
-						vert.y = Random.Range(-halfMapDepth, halfMapDepth);
-
-						if(x != 0 && x != numVertsX-1 ) {
-							vertices[i-1].y = vert.y;
-						}
-					}
-				} else {
-					vert.y = vertices[i-numVertsX].y;
 				}
 
 				vertices[i] = vert;
