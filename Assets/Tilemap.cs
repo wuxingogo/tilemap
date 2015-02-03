@@ -3,10 +3,11 @@ using System.Collections;
 
 [ExecuteInEditMode]
 public class TileMap : MonoBehaviour {
+	public int tileResolution = 64;
 	public int mapWidth = 3;
 	public int mapHeight = 2;
 	public float tileSize = 1.0f;
-	public float halfMapDepth = 0.25f;
+	public float halfMapDepth = 0.125f;
 
 	// Use this for initialization
 	void Start () {
@@ -21,22 +22,33 @@ public class TileMap : MonoBehaviour {
 		int numVertsZ = 2 * (mapHeight - 1) + 2;
 		int numVerts = numVertsX * numVertsZ;
 
+		float textureStep = (float)tileResolution / renderer.sharedMaterial.mainTexture.width;
+
 		Mesh mesh = new Mesh ();
 
 		Vector3[] vertices = new Vector3[numVerts];
 		Vector2[] uv = new Vector2[numVerts];
-
 
 		for (int z = 0; z < numVertsZ; z++) {
 			for(int x = 0; x < numVertsX; x++) {
 				int i = z * numVertsX + x;
 
 				Vector3 vert = new Vector3((x / 2) * tileSize, 0, (z / 2) * tileSize);
-				Vector2 texCoord = Vector2.zero;
+				Vector2 texCoord;
+
+				if(x % 2 == 0 && z % 2 == 0) {
+					int type = Random.Range(0, 4);
+					texCoord = new Vector2(type * textureStep, 0);
+				} else {
+					int tileX = (x/2)*2;
+					int tileZ = (z/2)*2;
+					int tileIndex = tileZ * numVertsX + tileX;
+					texCoord = uv[tileIndex];
+				}
 
 				if(x % 2 == 1) {
 					vert.x += tileSize;
-					texCoord.x = 1;
+					texCoord.x += textureStep;
 				}
 
 				if(z % 2 == 1) {
