@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MapData {
 	public int width;
 	public int height;
 	private int[,] map;
+
+	private List<Room> rooms = new List<Room>();
 
 	// Indexer declaration.
 	public int this[int x, int y]
@@ -33,8 +36,21 @@ public class MapData {
 			int roomY = Random.Range(0, height - roomHeight + 1);
 			
 			Room r = new Room (roomX, roomY, roomWidth, roomHeight);
-			createRoom (r);
+
+			if(!roomCollides(r)) {
+				createRoom (r);
+			}
 		}
+	}
+
+	public bool roomCollides(Room r) {
+		foreach (Room r2 in rooms) {
+			if(r.innerRoomCollidesWith(r2)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private void createRoom(Room r) {
@@ -47,5 +63,7 @@ public class MapData {
 				}
 			}
 		}
+
+		rooms.Add (r);
 	}
 }
