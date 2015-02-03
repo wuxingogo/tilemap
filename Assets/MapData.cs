@@ -25,28 +25,25 @@ public class MapData {
 		this.height = height;
 		map = new int[width,height];
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 20; i++) {
 			int roomWidth = Random.Range(4, 8);
 			int roomHeight = Random.Range(4, 8);
 			/* Add 1 because Random.Range() for ints excludes the max value */
 			int roomX = Random.Range(0, width - roomWidth + 1);
 			int roomY = Random.Range(0, height - roomHeight + 1);
 			
-			Rect r = new Rect (roomX, roomY, roomWidth, roomHeight);
+			Room r = new Room (roomX, roomY, roomWidth, roomHeight);
 			createRoom (r);
 		}
 	}
 
-	private void createRoom(Rect r) {
+	private void createRoom(Room r) {
 		for(int x = 0; x < r.width; x++) {
 			for(int y = 0; y < r.height; y++) {
-				int i = x + (int) r.x;
-				int j = y + (int) r.y;
-
 				if(x == 0 || x == r.width-1 || y == 0 || y == r.height-1) {
-					map[i, j] = 2;
+					map[x + r.x, y + r.y] = 2;
 				} else {
-					map[i, j] = 1;
+					map[x + r.x, y + r.y] = 1;
 				}
 			}
 		}
