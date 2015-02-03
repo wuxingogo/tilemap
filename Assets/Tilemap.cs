@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [ExecuteInEditMode]
 public class TileMap : MonoBehaviour {
@@ -9,14 +10,27 @@ public class TileMap : MonoBehaviour {
 	public float tileSize = 1.0f;
 	public float halfMapDepth = 0.125f;
 
+	public bool overlappingRooms = false;
+	public int numberOfRooms = 20;
+	[HideInInspector]
+	public int[] roomWidthRange = new [] {4, 8};
+	[HideInInspector]
+	public int[] roomHeightRange = new [] {4, 8};
+
+	private MapData map;
+	private List<Room> rooms;
+
 	// Use this for initialization
 	void Start () {
+		recreateMap ();
+	}
+
+	public void recreateMap() {
+		buildMap ();
 		buildMesh ();
 	}
 
 	public void buildMesh() {
-		MapData map = new MapData (mapWidth, mapHeight);
-
 		int numTiles = mapWidth * mapHeight;
 		int numTris = numTiles * 2;
 
@@ -106,5 +120,48 @@ public class TileMap : MonoBehaviour {
 		MeshCollider meshCollider = GetComponent<MeshCollider> ();
 		meshCollider.sharedMesh = mesh;
 	}
+
+	private void buildMap() {
+		map = new MapData (mapWidth, mapHeight);
+
+		rooms = new List<Room>();
+		
+		for (int i = 0; i < numberOfRooms; i++) {
+			int roomWidth = Random.Range(roomWidthRange[0], roomWidthRange[1]);
+			int roomHeight = Random.Range(roomHeightRange[0], roomHeightRange[1]);
+			/* Add 1 because Random.Range() for ints excludes the max value */
+			int roomX = Random.Range(0, map.width - roomWidth + 1);
+			int roomY = Random.Range(0, map.height - roomHeight + 1);
+			
+			Room r = new Room (roomX, roomY, roomWidth, roomHeight);
+			
+			if(overlappingRooms || !roomCollides(r)) {
+				createRoom (r);
+			}
+		}
+	}
 	
+	public bool roomCollides(Room r) {
+		foreach (Room r2 in rooms) {
+			if(r.innerRoomCollidesWith(r2)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	private void createRoom(Room r) {
+		for(int x = 0; x < r.width; x++) {
+			for(int y = 0; y < r.height; y++) {
+				if(x == 0 || x == r.width-1 || y == 0 || y == r.height-1) {
+					map[x + r.x, y + r.y] = 2;
+				} else {
+					map[x + r.x, y + r.y] = 1;
+				}
+			}
+		}
+		
+		rooms.Add (r);
+	}
 }
