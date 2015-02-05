@@ -182,13 +182,49 @@ public class TileMap : MonoBehaviour {
 		int dy = (y < r2.centerY) ? 1 : -1;
 
 		while (x != r2.centerX) {
-			map[x, y] = 1;
+			setHallwayTile(x, y);
 			x += dx;
 		}
 
 		while (y != r2.centerY) {
-			map[x, y] = 1;
+			setHallwayTile(x, y);
 			y += dy;
+		}
+	}
+
+	private void setHallwayTile(int x, int y) {
+		map[x, y] = 1;
+
+		if (x > 0 && map [x - 1, y] == 0) {
+			map [x - 1, y] = 2;
+		}
+
+		if (x + 1 < map.width && map [x + 1, y] == 0) {
+			map [x + 1, y] = 2;
+		}
+
+		if (y > 0 && map [x, y - 1] == 0) {
+			map [x, y - 1] = 2;
+		}
+		
+		if (y + 1 < map.height && map [x, y + 1] == 0) {
+			map [x, y + 1] = 2;
+		}
+
+		if (x > 0 && y > 0 && map [x - 1, y - 1] == 0) {
+			map [x - 1, y - 1] = 2;
+		}
+
+		if (x + 1 < map.width && y > 0 && map [x + 1, y - 1] == 0) {
+			map [x + 1, y - 1] = 2;
+		}
+
+		if (x > 0 && y + 1 < map.height && map [x - 1, y + 1] == 0) {
+			map [x - 1, y + 1] = 2;
+		}
+
+		if (x + 1 < map.width && y + 1 < map.height && map [x + 1, y + 1] == 0) {
+			map [x + 1, y + 1] = 2;
 		}
 	}
 }
