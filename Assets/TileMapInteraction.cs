@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TileMapMouse : MonoBehaviour {
+public class TileMapInteraction : MonoBehaviour {
 	public Transform selectionCube;
 
 	private TileMap tileMap;
@@ -31,5 +31,10 @@ public class TileMapMouse : MonoBehaviour {
 		} else {
 			selectionCube.gameObject.SetActive(false);
 		}
+
+		if (Input.GetKeyDown (KeyCode.Space)) {
+			tileMap.buildMap();
+		}
 	}
+
 }

@@ -20,7 +20,7 @@ public class TileMapInspector : Editor {
 		
 		if(GUILayout.Button("Recreate Map",  GUILayout.ExpandWidth(false)))
 		{
-			myScript.recreateMap();
+			myScript.buildMap();
 		}
 	}
 }

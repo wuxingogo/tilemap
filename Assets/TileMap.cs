@@ -22,11 +22,11 @@ public class TileMap : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		recreateMap ();
+		buildMap ();
 	}
 
-	public void recreateMap() {
-		buildMap ();
+	public void buildMap() {
+		buildMapData ();
 		buildMesh ();
 	}
 
@@ -121,7 +121,7 @@ public class TileMap : MonoBehaviour {
 		meshCollider.sharedMesh = mesh;
 	}
 
-	private void buildMap() {
+	private void buildMapData() {
 		map = new MapData (mapWidth, mapHeight);
 
 		rooms = new List<Room>();
