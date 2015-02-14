@@ -29,94 +29,93 @@ public class TileMap : MonoBehaviour {
 		buildMapData ();
 		buildMesh ();
 	}
-
 	public void buildMesh() {
 		int numTiles = mapWidth * mapHeight;
 		int numTris = numTiles * 2;
-
+		
 		int numVertsX = 2 * (mapWidth - 1) + 2;
-		int numVertsZ = 2 * (mapHeight - 1) + 2;
-		int numVerts = numVertsX * numVertsZ;
-
+		int numVertsY = 2 * (mapHeight - 1) + 2;
+		int numVerts = numVertsX * numVertsY;
+		
 		float textureStep = (float)tileResolution / renderer.sharedMaterial.mainTexture.width;
-
+		
 		Mesh mesh = new Mesh ();
-
+		
 		Vector3[] vertices = new Vector3[numVerts];
 		Vector2[] uv = new Vector2[numVerts];
-
-		for (int z = 0; z < numVertsZ; z++) {
+		
+		for (int y = 0; y < numVertsY; y++) {
 			for(int x = 0; x < numVertsX; x++) {
-				int i = z * numVertsX + x;
-
-				Vector3 vert = new Vector3((x / 2) * tileSize, 0, (z / 2) * tileSize);
+				int i = y * numVertsX + x;
+				
+				Vector3 vert = new Vector3((x / 2) * tileSize, (y / 2) * tileSize, 0);
 				
 				// Set vertex depth
-				if(z == 0 || z % 2 == 1) {
+				if(y == 0 || y % 2 == 1) {
 					if(x == numVertsX-1 || x % 2 == 0) {
-						vert.y = Random.Range(-halfMapDepth, halfMapDepth);
+						vert.z = Random.Range(-halfMapDepth, halfMapDepth);
 						
 						if(x != 0 && x != numVertsX-1 ) {
-							vertices[i-1].y = vert.y;
+							vertices[i-1].z = vert.z;
 						}
 					}
 				} else {
-					vert.y = vertices[i-numVertsX].y;
+					vert.z = vertices[i-numVertsX].z;
 				}
-
+				
 				Vector2 texCoord;
-
-				if(x % 2 == 0 && z % 2 == 0) {
-					int type = map[x/2, z/2];
+				
+				if(x % 2 == 0 && y % 2 == 0) {
+					int type = map[x/2, y/2];
 					texCoord = new Vector2(type * textureStep, 0);
 				} else {
 					int tileX = (x/2)*2;
-					int tileZ = (z/2)*2;
-					int tileIndex = tileZ * numVertsX + tileX;
+					int tileY = (y/2)*2;
+					int tileIndex = tileY * numVertsX + tileX;
 					texCoord = uv[tileIndex];
 				}
-
+				
 				if(x % 2 == 1) {
 					vert.x += tileSize;
 					texCoord.x += textureStep;
 				}
-
-				if(z % 2 == 1) {
-					vert.z += tileSize;
+				
+				if(y % 2 == 1) {
+					vert.y += tileSize;
 					texCoord.y = 1;
 				}
-
+				
 				vertices[i] = vert;
 				uv[i] = texCoord;
 			}
 		}
-
+		
 		int[] triangles = new int[numTris * 3];
-
-		for (int z = 0; z < mapHeight; z++) {
+		
+		for (int y = 0; y < mapHeight; y++) {
 			for (int x = 0; x < mapWidth; x++) {
-				int i = (z * mapWidth + x) * 2 * 3;
-				int j = z*2 * numVertsX + x*2;
-
+				int i = (y * mapWidth + x) * 2 * 3;
+				int j = y*2 * numVertsX + x*2;
+				
 				triangles [i] = j;
 				triangles [i + 1] = j + numVertsX;
 				triangles [i + 2] = j + 1;
-
+				
 				triangles [i + 3] = j + numVertsX;
 				triangles [i + 4] = j + numVertsX + 1;
 				triangles [i + 5] = j + 1;
 			}
 		}
-
+		
 		mesh.vertices = vertices;
 		mesh.uv = uv;
 		mesh.triangles = triangles;
-
+		
 		mesh.RecalculateNormals ();
-
+		
 		MeshFilter meshFilter = GetComponent<MeshFilter> ();
 		meshFilter.mesh = mesh;
-
+		
 		MeshCollider meshCollider = GetComponent<MeshCollider> ();
 		meshCollider.sharedMesh = mesh;
 	}

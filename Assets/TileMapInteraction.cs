@@ -9,7 +9,7 @@ public class TileMapInteraction : MonoBehaviour {
 	void Start() {
 		tileMap = GetComponent<TileMap> ();
 
-		selectionCube.localScale = new Vector3 (tileMap.tileSize, Mathf.Max(2*tileMap.halfMapDepth, 0.01f), tileMap.tileSize);
+		selectionCube.localScale = new Vector3 (tileMap.tileSize, tileMap.tileSize, Mathf.Max(2*tileMap.halfMapDepth, 0.01f));
 	}
 
 	// Update is called once per frame
@@ -24,8 +24,8 @@ public class TileMapInteraction : MonoBehaviour {
 			tilePos /= tileMap.tileSize;
 
 			tilePos.x = Mathf.Floor(tilePos.x) * tileMap.tileSize;
-			tilePos.y = 0;
-			tilePos.z = Mathf.Floor(tilePos.z) * tileMap.tileSize;
+			tilePos.y = Mathf.Floor(tilePos.y) * tileMap.tileSize;
+			tilePos.z = 0;
 
 			selectionCube.position = tilePos;
 		} else {
