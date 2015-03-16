@@ -17,7 +17,7 @@ public class TileMapInteraction : MonoBehaviour {
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 
 		RaycastHit hitInfo;
-		if (collider.Raycast (ray, out hitInfo, Mathf.Infinity)) {
+		if (GetComponent<Collider>().Raycast (ray, out hitInfo, Mathf.Infinity)) {
 			selectionCube.gameObject.SetActive(true);
 
 			Vector3 tilePos = transform.InverseTransformPoint(hitInfo.point);

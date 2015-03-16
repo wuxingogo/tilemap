@@ -37,7 +37,7 @@ public class TileMap : MonoBehaviour {
 		int numVertsY = 2 * (mapHeight - 1) + 2;
 		int numVerts = numVertsX * numVertsY;
 		
-		float textureStep = (float)tileResolution / renderer.sharedMaterial.mainTexture.width;
+		float textureStep = (float)tileResolution / GetComponent<Renderer>().sharedMaterial.mainTexture.width;
 		
 		Mesh mesh = new Mesh ();
 		
