@@ -1,3 +1,10 @@
+IMPORTANT: Currently there is a problem MSAA and texture atlas bleeding. So I must turn off MSAA in the Quality settings of any Unity project I want to avoid the problem in (since I cannot export these settings with a unity package). A real fix is to have centroid sampling or be able to turn on and off multisampling when I'm rendering just the tilemap, but currently I don't think I'm able to do either fix in Unity.
+
+See this link for more details: http://stackoverflow.com/questions/6488131/artifacts-when-enabling-4x-msaa-anti-aliasing-on-ipad-ios/6488465#6488465
+
+
+I have encountered bleeding problems that I managed to fixed with "half pixel correction". See this link for more details on that: http://gamedev.stackexchange.com/questions/46963/how-to-avoid-texture-bleeding-in-a-texture-atlas
+
 Look into making selection that literally colors a part of the mesh (rather than placing a transparent cube on top)
 	possibly have a highlighted version of every tile on the map so on select I change the uv of the tile to the selected version's coords
 	possibly have a 2 triangle transparent plane that I modify the vertices to overlap the current tile
