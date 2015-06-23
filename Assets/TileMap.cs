@@ -9,22 +9,22 @@ public class TileMap : MonoBehaviour {
 	public int mapHeight = 2;
 	public float tileSize = 1.0f;
 	public float halfMapDepth = 0.125f;
-
+	
 	public bool overlappingRooms = false;
 	public int numberOfRooms = 20;
 	[HideInInspector]
 	public int[] roomWidthRange = new [] {4, 8};
 	[HideInInspector]
 	public int[] roomHeightRange = new [] {4, 8};
-
+	
 	private MapData map;
 	private List<Room> rooms;
-
+	
 	// Use this for initialization
 	void Start () {
 		buildMap ();
 	}
-
+	
 	public void buildMap() {
 		buildMapData ();
 		buildMesh ();
@@ -38,6 +38,9 @@ public class TileMap : MonoBehaviour {
 		int numVerts = numVertsX * numVertsY;
 		
 		float textureStep = (float)tileResolution / GetComponent<Renderer>().sharedMaterial.mainTexture.width;
+		// Used to give u coordinates that are in the center of the texel rather than the left corner see "half pixel correction"
+		float texelHalfWidth = (1f / GetComponent<Renderer> ().sharedMaterial.mainTexture.width) / 2f;
+		
 		
 		Mesh mesh = new Mesh ();
 		
@@ -67,7 +70,7 @@ public class TileMap : MonoBehaviour {
 				
 				if(x % 2 == 0 && y % 2 == 0) {
 					int type = map[x/2, y/2];
-					texCoord = new Vector2(type * textureStep, 0);
+					texCoord = new Vector2(texelHalfWidth + type * textureStep, 0);
 				} else {
 					int tileX = (x/2)*2;
 					int tileY = (y/2)*2;
@@ -77,7 +80,7 @@ public class TileMap : MonoBehaviour {
 				
 				if(x % 2 == 1) {
 					vert.x += tileSize;
-					texCoord.x += textureStep;
+					texCoord.x += textureStep - 2f*texelHalfWidth;
 				}
 				
 				if(y % 2 == 1) {
@@ -119,10 +122,10 @@ public class TileMap : MonoBehaviour {
 		MeshCollider meshCollider = GetComponent<MeshCollider> ();
 		meshCollider.sharedMesh = mesh;
 	}
-
+	
 	private void buildMapData() {
 		map = new MapData (mapWidth, mapHeight);
-
+		
 		rooms = new List<Room>();
 		
 		for (int i = 0; i < numberOfRooms; i++) {
@@ -138,12 +141,12 @@ public class TileMap : MonoBehaviour {
 				createRoom (r);
 			}
 		}
-
+		
 		for (int i = 0; i < rooms.Count; i++) {
 			if(!rooms[i].isConnected) {
 				int j = i + Random.Range(1, rooms.Count);
 				j %= rooms.Count;
-
+				
 				createHallway (rooms [i], rooms [j]);
 			}
 		}
@@ -172,36 +175,36 @@ public class TileMap : MonoBehaviour {
 		
 		rooms.Add (r);
 	}
-
+	
 	private void createHallway(Room r1, Room r2) {
 		int x = r1.centerX;
 		int y = r1.centerY;
-
+		
 		int dx = (x < r2.centerX) ? 1 : -1;
 		int dy = (y < r2.centerY) ? 1 : -1;
-
+		
 		while (x != r2.centerX) {
 			setHallwayTile(x, y);
 			x += dx;
 		}
-
+		
 		while (y != r2.centerY) {
 			setHallwayTile(x, y);
 			y += dy;
 		}
 	}
-
+	
 	private void setHallwayTile(int x, int y) {
 		map[x, y] = 1;
-
+		
 		if (x > 0 && map [x - 1, y] == 0) {
 			map [x - 1, y] = 2;
 		}
-
+		
 		if (x + 1 < map.width && map [x + 1, y] == 0) {
 			map [x + 1, y] = 2;
 		}
-
+		
 		if (y > 0 && map [x, y - 1] == 0) {
 			map [x, y - 1] = 2;
 		}
@@ -209,19 +212,19 @@ public class TileMap : MonoBehaviour {
 		if (y + 1 < map.height && map [x, y + 1] == 0) {
 			map [x, y + 1] = 2;
 		}
-
+		
 		if (x > 0 && y > 0 && map [x - 1, y - 1] == 0) {
 			map [x - 1, y - 1] = 2;
 		}
-
+		
 		if (x + 1 < map.width && y > 0 && map [x + 1, y - 1] == 0) {
 			map [x + 1, y - 1] = 2;
 		}
-
+		
 		if (x > 0 && y + 1 < map.height && map [x - 1, y + 1] == 0) {
 			map [x - 1, y + 1] = 2;
 		}
-
+		
 		if (x + 1 < map.width && y + 1 < map.height && map [x + 1, y + 1] == 0) {
 			map [x + 1, y + 1] = 2;
 		}
