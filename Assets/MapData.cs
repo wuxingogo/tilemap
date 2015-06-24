@@ -51,7 +51,7 @@ public class MapData {
 		if (count > 0) {
 			int connectedCount = numberOfConnectedTiles (startX, startY);
 
-			result = count == connectedCount;
+			result = (count == connectedCount);
 		}
 
 		return result;
@@ -66,7 +66,7 @@ public class MapData {
 		bool[,] visited = new bool[width, height];
 
 		List<int> list = new List<int> ();
-		list.Add (startX * width + startY);
+		list.Add (startX * height + startY);
 
 		int count = 0;
 
@@ -74,8 +74,8 @@ public class MapData {
 			int index = list[list.Count-1];
 			list.RemoveAt(list.Count-1);
 
-			int x = index / width;
-			int y = index % width;
+			int x = index / height;
+			int y = index % height;
 
 			if(!visited[x, y]) {
 				visited[x, y] = true;
@@ -84,19 +84,19 @@ public class MapData {
 					count++;
 
 					if (x > 0 && !visited[x - 1, y]) {
-						list.Add ((x - 1) * width + y);
+						list.Add ((x - 1) * height + y);
 					}
 
-					if (x < this.width - 1 && !visited[x + 1, y]) {
-						list.Add ((x + 1) * width + y);
+					if (x < this.height - 1 && !visited[x + 1, y]) {
+						list.Add ((x + 1) * height + y);
 					}
 
 					if (y > 0 && !visited[x, y - 1]) {
-						list.Add (x * width + (y - 1));
+						list.Add (x * height + (y - 1));
 					}
 					
 					if (y < this.height - 1 && !visited[x, y + 1]) {
-						list.Add (x * width + (y + 1));
+						list.Add (x * height + (y + 1));
 					}
 				}
 			}

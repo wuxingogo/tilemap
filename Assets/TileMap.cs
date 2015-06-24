@@ -12,9 +12,8 @@ public class TileMap : MonoBehaviour {
 	
 	public bool overlappingRooms = false;
 	public int numberOfRooms = 20;
-	[HideInInspector]
+
 	public int[] roomWidthRange = new [] {4, 8};
-	[HideInInspector]
 	public int[] roomHeightRange = new [] {4, 8};
 	
 	private MapData map;
@@ -127,7 +126,8 @@ public class TileMap : MonoBehaviour {
 		map = new MapData (mapWidth, mapHeight);
 		
 		rooms = new List<Room>();
-		
+
+		// Randomly create the rooms
 		for (int i = 0; i < numberOfRooms; i++) {
 			int roomWidth = Random.Range(roomWidthRange[0], roomWidthRange[1]);
 			int roomHeight = Random.Range(roomHeightRange[0], roomHeightRange[1]);
@@ -142,18 +142,16 @@ public class TileMap : MonoBehaviour {
 			}
 		}
 
-		Debug.Log ("-------------------------------------------");
-		
+		// Randomly connect the rooms
 		for (int i = 0; i < rooms.Count; i++) {
 			int j = i + Random.Range(1, rooms.Count);
 			j %= rooms.Count;
 			
 			createHallway (rooms [i], rooms [j]);
-
-			//Debug.Log ("Connecting Room " + i + " " + rooms[i] +" to Room " + j + " " + rooms[j]);
 		}
 
-		Debug.Log (map.isConnectedMap (1));
+		// Make sure there are no isolated groups of rooms
+		connectAllRooms ();
 	}
 	
 	public bool roomCollides(Room r) {
@@ -196,6 +194,9 @@ public class TileMap : MonoBehaviour {
 			setHallwayTile(x, y);
 			y += dy;
 		}
+
+		r1.addConnection (r2);
+		r2.addConnection (r1);
 	}
 	
 	private void setHallwayTile(int x, int y) {
@@ -232,6 +233,52 @@ public class TileMap : MonoBehaviour {
 		if (x + 1 < map.width && y + 1 < map.height && map [x + 1, y + 1] == 0) {
 			map [x + 1, y + 1] = 2;
 		}
+	}
+
+	private void connectAllRooms() {
+		List<List<Room>> connectedRooms = new List<List<Room>>();
+
+		HashSet<Room> visited = new HashSet<Room> ();
+
+		for(int i = 0; i < rooms.Count; i++) {
+			if(!visited.Contains(rooms[i])) {
+				connectedRooms.Add(getConnectedRooms(rooms[i], visited));
+			}
+		}
+
+		if (connectedRooms.Count > 1) {
+			for(int i = 0; i < connectedRooms.Count-1; i++) {
+				Room r1 = connectedRooms[i][0];
+				Room r2 = connectedRooms[i+1][0];
+
+				createHallway(r1, r2);
+			}
+		}
+	}
+
+	private List<Room> getConnectedRooms(Room startRoom, HashSet<Room> visited) {
+		List<Room> connectedRooms = new List<Room> ();
+
+		List<Room> list = new List<Room> ();
+		list.Add (startRoom);
+		
+		while (list.Count > 0) {
+			Room r = list[list.Count-1];
+			list.RemoveAt(list.Count-1);
+			
+			if(!visited.Contains(r)) {
+				visited.Add(r);
+				connectedRooms.Add(r);
+
+				foreach(Room c in r.connectedTo) {
+					if(!visited.Contains(c)) {
+						list.Add(c);
+					}
+				}
+			}
+		}
+		
+		return connectedRooms;
 	}
 
 }
