@@ -141,13 +141,19 @@ public class TileMap : MonoBehaviour {
 				createRoom (r);
 			}
 		}
+
+		Debug.Log ("-------------------------------------------");
 		
 		for (int i = 0; i < rooms.Count; i++) {
 			int j = i + Random.Range(1, rooms.Count);
 			j %= rooms.Count;
 			
 			createHallway (rooms [i], rooms [j]);
+
+			//Debug.Log ("Connecting Room " + i + " " + rooms[i] +" to Room " + j + " " + rooms[j]);
 		}
+
+		Debug.Log (map.isConnectedMap (1));
 	}
 	
 	public bool roomCollides(Room r) {
@@ -227,4 +233,5 @@ public class TileMap : MonoBehaviour {
 			map [x + 1, y + 1] = 2;
 		}
 	}
+
 }
