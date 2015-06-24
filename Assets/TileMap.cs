@@ -143,12 +143,10 @@ public class TileMap : MonoBehaviour {
 		}
 		
 		for (int i = 0; i < rooms.Count; i++) {
-			if(!rooms[i].isConnected) {
-				int j = i + Random.Range(1, rooms.Count);
-				j %= rooms.Count;
-				
-				createHallway (rooms [i], rooms [j]);
-			}
+			int j = i + Random.Range(1, rooms.Count);
+			j %= rooms.Count;
+			
+			createHallway (rooms [i], rooms [j]);
 		}
 	}
 	

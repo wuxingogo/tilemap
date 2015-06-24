@@ -6,7 +6,6 @@ public class Room {
 	public int y;
 	public int width;
 	public int height;
-	public bool isConnected;
 
 	public int maxX {
 		get 
@@ -42,7 +41,6 @@ public class Room {
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		this.isConnected = false;
 	}
 
 	public bool innerRoomCollidesWith(Room r) {
