@@ -25,7 +25,7 @@ public class MapBuilder {
 		this.roomHeightRange = new [] {4, 8};
 	}
 
-	public MapData buildMap() {
+	public MapData build() {
 		map = new MapData (mapWidth, mapHeight);
 		
 		rooms = new List<Room>();

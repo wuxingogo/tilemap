@@ -10,18 +10,14 @@ public class TileMap : MonoBehaviour {
 
 	public MapBuilder mapBuilder;
 
-	private MapData map;
-	
 	// Use this for initialization
 	void Start () {
 		buildMap ();
 	}
 	
 	public void buildMap() {
-		map = mapBuilder.buildMap ();
-		buildMesh ();
-	}
-	public void buildMesh() {
+		MapData map = mapBuilder.build ();
+
 		int numTiles = map.width * map.height;
 		int numTris = numTiles * 2;
 		
