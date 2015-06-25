@@ -9,6 +9,8 @@ public class TileMap : MonoBehaviour {
 	public int mapHeight = 2;
 	public float tileSize = 1.0f;
 	public float halfMapDepth = 0.125f;
+
+	public bool mirrorMap = false;
 	
 	public bool overlappingRooms = false;
 	public int numberOfRooms = 20;
@@ -131,8 +133,15 @@ public class TileMap : MonoBehaviour {
 		for (int i = 0; i < numberOfRooms; i++) {
 			int roomWidth = Random.Range(roomWidthRange[0], roomWidthRange[1]);
 			int roomHeight = Random.Range(roomHeightRange[0], roomHeightRange[1]);
+
 			/* Add 1 because Random.Range() for ints excludes the max value */
-			int roomX = Random.Range(0, map.width - roomWidth + 1);
+			int roomX;
+			if(mirrorMap) {
+				roomX = Random.Range(0, map.width/2 - roomWidth/2);
+			} else {
+				roomX = Random.Range(0, map.width - roomWidth + 1);
+			}
+
 			int roomY = Random.Range(0, map.height - roomHeight + 1);
 			
 			Room r = new Room (roomX, roomY, roomWidth, roomHeight);
@@ -152,6 +161,14 @@ public class TileMap : MonoBehaviour {
 
 		// Make sure there are no isolated groups of rooms
 		connectAllRooms ();
+
+		if (mirrorMap) {
+			for (int x = 0; x < map.width/2; x++) {
+				for (int y = 0; y < map.height; y++) {
+					map [map.width - 1 - x, y] = map [x, y];
+				}
+			}
+		}
 	}
 	
 	public bool roomCollides(Room r) {

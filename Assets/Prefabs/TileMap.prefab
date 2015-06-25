@@ -91,6 +91,7 @@ MonoBehaviour:
   mapHeight: 30
   tileSize: 1
   halfMapDepth: .125
+  mirrorMap: 0
   overlappingRooms: 0
   numberOfRooms: 20
   roomWidthRange: 0400000008000000
