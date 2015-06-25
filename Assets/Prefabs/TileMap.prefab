@@ -87,15 +87,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tileResolution: 64
-  mapWidth: 30
-  mapHeight: 30
   tileSize: 1
   halfMapDepth: .125
-  mirrorMap: 0
-  overlappingRooms: 0
-  numberOfRooms: 20
-  roomWidthRange: 0400000008000000
-  roomHeightRange: 0400000008000000
+  mapBuilder:
+    mapWidth: 30
+    mapHeight: 30
+    numberOfRooms: 20
+    overlappingRooms: 0
+    mirrorMap: 0
+    roomWidthRange: 0400000008000000
+    roomHeightRange: 0400000008000000
 --- !u!114 &11452902
 MonoBehaviour:
   m_ObjectHideFlags: 1
