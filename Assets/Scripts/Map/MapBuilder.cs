@@ -11,6 +11,7 @@ public class MapBuilder {
 	public bool mirrorMap;
 	public int[] roomWidthRange;
 	public int[] roomHeightRange;
+	public int innerHallwayWidth;
 
 	private MapData map;
 	private List<Room> rooms;
@@ -99,20 +100,25 @@ public class MapBuilder {
 	}
 	
 	private void createHallway(Room r1, Room r2) {
-		int x = r1.centerX;
-		int y = r1.centerY;
-		
-		int dx = (x < r2.centerX) ? 1 : -1;
-		int dy = (y < r2.centerY) ? 1 : -1;
-		
-		while (x != r2.centerX) {
-			setHallwayTile(x, y);
-			x += dx;
+		int dx = (r1.centerX < r2.centerX) ? 1 : -1;
+		int dy = (r1.centerY < r2.centerY) ? 1 : -1;
+
+		int width1 = -1 * innerHallwayWidth / 2;
+		int width2 = innerHallwayWidth / 2;
+		if (innerHallwayWidth % 2 == 1) {
+			width2 += 1;
 		}
-		
-		while (y != r2.centerY) {
-			setHallwayTile(x, y);
-			y += dy;
+
+		for (int y = r1.centerY + width1; y < r1.centerY + width2; y++) {
+			for (int x = r1.centerX; x != r2.centerX; x += dx) {
+				setHallwayTile(x, y);
+			}
+		}
+
+		for (int x = r2.centerX + width1; x < r2.centerX + width2; x++) {
+			for (int y = r1.centerY; y != r2.centerY; y += dy) {
+				setHallwayTile(x, y);
+			}
 		}
 		
 		r1.addConnection (r2);
@@ -120,38 +126,40 @@ public class MapBuilder {
 	}
 	
 	private void setHallwayTile(int x, int y) {
-		map[x, y] = 1;
-		
-		if (x > 0 && map [x - 1, y] == 0) {
-			map [x - 1, y] = 2;
-		}
-		
-		if (x + 1 < map.width && map [x + 1, y] == 0) {
-			map [x + 1, y] = 2;
-		}
-		
-		if (y > 0 && map [x, y - 1] == 0) {
-			map [x, y - 1] = 2;
-		}
-		
-		if (y + 1 < map.height && map [x, y + 1] == 0) {
-			map [x, y + 1] = 2;
-		}
-		
-		if (x > 0 && y > 0 && map [x - 1, y - 1] == 0) {
-			map [x - 1, y - 1] = 2;
-		}
-		
-		if (x + 1 < map.width && y > 0 && map [x + 1, y - 1] == 0) {
-			map [x + 1, y - 1] = 2;
-		}
-		
-		if (x > 0 && y + 1 < map.height && map [x - 1, y + 1] == 0) {
-			map [x - 1, y + 1] = 2;
-		}
-		
-		if (x + 1 < map.width && y + 1 < map.height && map [x + 1, y + 1] == 0) {
-			map [x + 1, y + 1] = 2;
+		if (x > 0 && x < map.width && y > 0 && y < map.height) {
+			map [x, y] = 1;
+
+			if (x > 0 && map [x - 1, y] == 0) {
+				map [x - 1, y] = 2;
+			}
+			
+			if (x + 1 < map.width && map [x + 1, y] == 0) {
+				map [x + 1, y] = 2;
+			}
+			
+			if (y > 0 && map [x, y - 1] == 0) {
+				map [x, y - 1] = 2;
+			}
+			
+			if (y + 1 < map.height && map [x, y + 1] == 0) {
+				map [x, y + 1] = 2;
+			}
+			
+			if (x > 0 && y > 0 && map [x - 1, y - 1] == 0) {
+				map [x - 1, y - 1] = 2;
+			}
+			
+			if (x + 1 < map.width && y > 0 && map [x + 1, y - 1] == 0) {
+				map [x + 1, y - 1] = 2;
+			}
+			
+			if (x > 0 && y + 1 < map.height && map [x - 1, y + 1] == 0) {
+				map [x - 1, y + 1] = 2;
+			}
+			
+			if (x + 1 < map.width && y + 1 < map.height && map [x + 1, y + 1] == 0) {
+				map [x + 1, y + 1] = 2;
+			}
 		}
 	}
 	
