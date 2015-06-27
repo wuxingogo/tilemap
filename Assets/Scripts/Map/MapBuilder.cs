@@ -63,6 +63,8 @@ public class MapBuilder {
 		
 		// Make sure there are no isolated groups of rooms
 		connectAllRooms ();
+
+		verifyBorderWalls ();
 		
 		if (mirrorMap) {
 			for (int x = 0; x < map.width/2; x++) {
@@ -207,5 +209,28 @@ public class MapBuilder {
 		}
 		
 		return connectedRooms;
+	}
+
+	/** 
+	 * Make sure any hallways against the borders of the map are fully 
+	 * enclosed in wall times (even if that means we have to shave off 
+	 * some tiles from the hallway 
+	 */
+	private void verifyBorderWalls() {
+		for (int x = 0; x < map.width; x++) {
+			setBorderWall(x, 0);
+			setBorderWall(x, map.height-1);
+		}
+
+		for (int y = 0; y < map.height; y++) {
+			setBorderWall(0, y);
+			setBorderWall(map.width-1, y);
+		}
+	}
+
+	private void setBorderWall(int x, int y) {
+		if (map [x, y] == 1) {
+			map[x, y] = 2;
+		}
 	}
 }
