@@ -97,7 +97,7 @@ MonoBehaviour:
     mirrorMap: 0
     roomWidthRange: 0400000008000000
     roomHeightRange: 0400000008000000
-    innerHallwayWidth: 1
+    innerHallwayWidthRange: 0100000001000000
 --- !u!114 &11452902
 MonoBehaviour:
   m_ObjectHideFlags: 1

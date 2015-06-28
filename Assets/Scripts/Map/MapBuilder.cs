@@ -11,7 +11,7 @@ public class MapBuilder {
 	public bool mirrorMap;
 	public int[] roomWidthRange;
 	public int[] roomHeightRange;
-	public int innerHallwayWidth;
+	public int[] innerHallwayWidthRange;
 
 	private MapData map;
 	private List<Room> rooms;
@@ -24,6 +24,7 @@ public class MapBuilder {
 		this.mirrorMap = false;
 		this.roomWidthRange = new [] {4, 8};
 		this.roomHeightRange = new [] {4, 8};
+		this.roomHeightRange = new [] {1, 1};
 	}
 
 	public MapData build() {
@@ -33,10 +34,10 @@ public class MapBuilder {
 		
 		// Randomly create the rooms
 		for (int i = 0; i < numberOfRooms; i++) {
-			int roomWidth = Random.Range(roomWidthRange[0], roomWidthRange[1]);
-			int roomHeight = Random.Range(roomHeightRange[0], roomHeightRange[1]);
-			
 			/* Add 1 because Random.Range() for ints excludes the max value */
+			int roomWidth = Random.Range(roomWidthRange[0], roomWidthRange[1] + 1);
+			int roomHeight = Random.Range(roomHeightRange[0], roomHeightRange[1] + 1);
+
 			int roomX;
 			if(mirrorMap) {
 				roomX = Random.Range(0, map.width/2 - roomWidth/2);
@@ -105,9 +106,11 @@ public class MapBuilder {
 		int dx = (r1.centerX < r2.centerX) ? 1 : -1;
 		int dy = (r1.centerY < r2.centerY) ? 1 : -1;
 
-		int width1 = -1 * innerHallwayWidth / 2;
-		int width2 = innerHallwayWidth / 2;
-		if (innerHallwayWidth % 2 == 1) {
+		int innerWidth = Random.Range (innerHallwayWidthRange [0], innerHallwayWidthRange [1] + 1);
+
+		int width1 = -1 * innerWidth / 2;
+		int width2 = innerWidth / 2;
+		if (innerWidth % 2 == 1) {
 			width2 += 1;
 		}
 
