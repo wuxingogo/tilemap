@@ -40,7 +40,7 @@ public class MapBuilder {
 
 			int roomX;
 			if(mirrorMap) {
-				roomX = Random.Range(0, map.width/2 - roomWidth/2);
+				roomX = Random.Range(0, (map.width/2) - (roomWidth/2));
 			} else {
 				roomX = Random.Range(0, map.width - roomWidth + 1);
 			}
@@ -72,6 +72,10 @@ public class MapBuilder {
 				for (int y = 0; y < map.height; y++) {
 					map [map.width - 1 - x, y] = map [x, y];
 				}
+			}
+
+			if(!map.isConnectedMap(1)) {
+				connectMirroredMap ();
 			}
 		}
 
@@ -234,6 +238,24 @@ public class MapBuilder {
 	private void setBorderWall(int x, int y) {
 		if (map [x, y] == 1) {
 			map[x, y] = 2;
+		}
+	}
+
+	private void connectMirroredMap ()
+	{
+		int currentMaxX = -1;
+		Room currentRoom = null;
+		for (int i = 0; i < rooms.Count; i++) {
+			if (rooms [i].maxX > currentMaxX) {
+				currentMaxX = rooms [i].maxX;
+				currentRoom = rooms [i];
+			}
+		}
+		int connectionWidth = map.width - 2 * currentRoom.x;
+		for (int x = 1; x < connectionWidth - 1; x++) {
+			for (int y = 1; y < currentRoom.height - 1; y++) {
+				setHallwayTile (x + currentRoom.x, y + currentRoom.y);
+			}
 		}
 	}
 }
