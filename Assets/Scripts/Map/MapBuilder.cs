@@ -119,13 +119,13 @@ public class MapBuilder {
 		}
 
 		for (int y = r1.centerY + width1; y < r1.centerY + width2; y++) {
-			for (int x = r1.centerX; x != r2.centerX; x += dx) {
+			for (int x = r1.centerX; x != r2.centerX + (dx * innerWidth / 2); x += dx) {
 				setHallwayTile(x, y);
 			}
 		}
 
 		for (int x = r2.centerX + width1; x < r2.centerX + width2; x++) {
-			for (int y = r1.centerY; y != r2.centerY; y += dy) {
+			for (int y = r1.centerY; y != r2.centerY + (dy * innerWidth / 2); y += dy) {
 				setHallwayTile(x, y);
 			}
 		}
