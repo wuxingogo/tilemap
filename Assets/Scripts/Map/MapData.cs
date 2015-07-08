@@ -87,7 +87,7 @@ public class MapData {
 						list.Add ((x - 1) * height + y);
 					}
 
-					if (x < this.height - 1 && !visited[x + 1, y]) {
+					if (x < this.width - 1 && !visited[x + 1, y]) {
 						list.Add ((x + 1) * height + y);
 					}
 
