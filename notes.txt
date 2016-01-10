@@ -1,4 +1,10 @@
+1/9/2016 Update: I turned back on the Mipmapping on the texture image and the anti aliasing in the Quality settings. The MSAA is no longer causing issues when I tested it and the Mipmaps are necessary to prevent the flickering aliasing that can occur when tiles have more than one color in them (like the red letters I added to the tiles) and the tilemap is far away.
+
+
 IMPORTANT: Currently there is a problem MSAA and texture atlas bleeding. So I must turn off MSAA in the Quality settings of any Unity project I want to avoid the problem in (since I cannot export these settings with a unity package). A real fix is to have centroid sampling or be able to turn on and off multisampling when I'm rendering just the tilemap, but currently I don't think I'm able to do either fix in Unity.
+
+Here is my commit message explaining:
+"I made sure to turn off MSAA in the Quality settings of the project becuase it causes bleeding with the map atlas. Also turned off mip mapping on the atlas texture to prevent a less severe bleeding (Update 1/9/2015: I'm not seeing this bleeding now and in fact mipmapping is highly desirable when far away from the tiles else I see flickering changes in pixels). But this comes at the cost of sparkling visual artifacts on zoomed out versions of the map. It seems if I want a better fix I could try adding padding between the tiles and turn mip mapping back on (but this just delays the problem to a later mipmap level). I can also try making the texture image into DDS file so I can specify what the mipmap levels look like."
 
 See this link for more details: http://stackoverflow.com/questions/6488131/artifacts-when-enabling-4x-msaa-anti-aliasing-on-ipad-ios/6488465#6488465
 
